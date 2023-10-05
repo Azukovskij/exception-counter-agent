@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Premain-Class: com.eisgroup.javaagent.ThrowableMetricsJavaAgent
+Agent-Class: com.eisgroup.javaagent.ThrowableMetricsJavaAgent
+Can-Redefine-Classes: true
+Can-Retransform-Classes: false
