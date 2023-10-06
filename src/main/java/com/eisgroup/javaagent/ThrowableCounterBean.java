@@ -1,11 +1,13 @@
 package com.eisgroup.javaagent;
 
 import java.lang.management.ManagementFactory;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import javax.management.Attribute;
 import javax.management.AttributeList;
@@ -80,10 +82,17 @@ public class ThrowableCounterBean implements Consumer<Class<?>>, DynamicMBean {
     }
 
     @Override
-    public Object getAttribute(String attribute)
-            throws AttributeNotFoundException, MBeanException, ReflectionException {
+    public Object getAttribute(String attribute) {
         return counters.get(attribute);
     }
+
+    @Override
+    public AttributeList getAttributes(String[] attributes) {
+        return Arrays.stream(attributes)
+            .map(attribute -> new Attribute(attribute, getAttribute(attribute)))
+            .collect(Collectors.toCollection(AttributeList::new));
+    }
+
 
     @Override
     public MBeanInfo getMBeanInfo() {
@@ -96,12 +105,7 @@ public class ThrowableCounterBean implements Consumer<Class<?>>, DynamicMBean {
     public void setAttribute(Attribute attribute)
         throws AttributeNotFoundException, InvalidAttributeValueException, MBeanException, ReflectionException {
     }
-
-    @Override
-    public AttributeList getAttributes(String[] attributes) {
-        return null;
-    }
-
+    
     @Override
     public AttributeList setAttributes(AttributeList attributes) {
         return null;
